@@ -123,10 +123,10 @@ pc.script.create('echaskech', function (context) {
             console.log("y ratio: " + y_ratio + " " + y_state);
             console.log("z ratio: " + z_ratio + " " + z_state);
             
-            for (pos = 0; pos <= longest; pos++){
-                var x = x_state[Math.round(pos * x_ratio)];
-                var y = y_state[Math.round(pos * y_ratio)];
-                var z = z_state[Math.round(pos * z_ratio)];
+            for (pos = 0; pos < longest; pos++){
+                var x = x_state[Math.floor(pos * x_ratio)];
+                var y = y_state[Math.floor(pos * y_ratio)];
+                var z = z_state[Math.floor(pos * z_ratio)];
                 console.log("Loop: X: " + x + " Y: " + y + " Z: " + z);
                 this.spawnCube(x,y,z);
                     
