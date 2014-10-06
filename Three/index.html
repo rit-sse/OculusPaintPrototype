@@ -1,0 +1,38 @@
+
+
+<!DOCTYPE html>
+<!-- The previous line tells the browser, that the page uses the HTML5 standard. -->
+
+<html>
+<head>
+    <title>Test</title>
+    <script src="dependency/three.js"></script>
+    <script src="dependency/draw.js"></script>
+</head>
+	<body>
+	    <script>
+	        window.onload = function() {
+				var renderer = new THREE.WebGLRenderer();
+				Draw = new Draw();
+
+	    		renderer.setSize( 800, 600 );
+
+	    		document.body.appendChild( renderer.domElement );
+
+	   			var scene = new THREE.Scene();
+
+	    		var camera = new THREE.PerspectiveCamera(45, 800 / 600, 1, 500);
+
+			    camera.position.set(0, 0, 100);
+			    camera.lookAt(scene.position);
+			    scene.add(camera);
+
+			    renderer.render(scene, camera);  
+
+			    Draw.init(renderer,scene,camera);
+			    Draw.drawLine(new THREE.Vector3(0,0,0), new THREE.Vector3(10,10,10));
+	            
+			};
+	    </script>
+	</body>
+</html>
