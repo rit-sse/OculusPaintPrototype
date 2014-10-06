@@ -19,12 +19,11 @@ Draw.prototype.drawLine = function(start, stop){
     geometry.vertices.push(stop);
 
     var material = new THREE.LineBasicMaterial({
-        color: 0x000000
+        color: 0x000000,
+        linewidth: 5
         });
 
     var line = new THREE.Line(geometry, material);
 
     this.scene.add( line );
-
-    this.renderer.render(this.scene, this.camera);
 }
