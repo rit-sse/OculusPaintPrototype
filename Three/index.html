@@ -55,14 +55,9 @@
 					//statusEl.innerText = 'Plugin load failed: ' + error.toString();
 					alert('Plugin load failed: ' + error.toString());
 				}
-
-				try {
-					init();
-					animate();
-				} catch (e) {
-					//statusEl.innerText = e.toString();
-					console.log(e);
-				}
+				init();
+				animate();
+				
 			});
 
 			function init() {
@@ -86,7 +81,7 @@
 				// floor
 				var geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
 				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-				var material = new THREE.MeshBasicMaterial( {color: 0xDDDDDD, side: THREE.DoubleSide} );
+				var material = new THREE.MeshBasicMaterial( {color: 0xBBBBBB, side: THREE.DoubleSide} );
 				var plane = new THREE.Mesh( geometry, material );
 				scene.add( plane );
 
