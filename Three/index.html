@@ -79,13 +79,30 @@
 				scene.add( controls.getObject() );
 
 				// floor
-				var geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
-				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-				var material = new THREE.MeshBasicMaterial( {color: 0xBBBBBB, side: THREE.DoubleSide} );
-				var plane = new THREE.Mesh( geometry, material );
-				scene.add( plane );
+				var segments = 80;
 
-				
+				var geometry = new THREE.PlaneGeometry(1000, 1000, segments, segments);
+				var matEven = new THREE.MeshBasicMaterial({
+					color: 0xCCCCFC
+				});
+				var matOdd = new THREE.MeshBasicMaterial({
+					color: 0x444464
+				});
+
+				var materials = [matEven, matOdd];
+				var i,x,y;
+				for (x=0; x < segments ; x++){
+					for (y = 0; y < segments; y++){
+						i = x * segments + y;
+						geometry.faces[i].materialIndex = (x + y) % 2;
+					}
+				}
+
+				var floor = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
+
+				floor.position.y = -1.9;//make it on the ground 
+				floor.rotation.x = -Math.PI/2; //rotate it to the ground
+				scene.add(floor);
 
 				renderer = new THREE.WebGLRenderer({
 					devicePixelRatio: 1,
@@ -97,10 +114,10 @@
 				effect = new THREE.OculusRiftEffect( renderer );
 
 				draw.init(renderer, scene, camera);
-				draw.drawLine(new THREE.Vector3(0,0,0), new THREE.Vector3(100,100,0));
-				draw.drawLine(new THREE.Vector3(100,100,0), new THREE.Vector3(0,200,0));
-				draw.drawLine(new THREE.Vector3(0,200,0), new THREE.Vector3(-100,100,0));
-				draw.drawLine(new THREE.Vector3(-100,100,0), new THREE.Vector3(0,0,0));
+				draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100));
+				draw.drawLine(new THREE.Vector3(100,100,-100), new THREE.Vector3(0,200,-100));
+				draw.drawLine(new THREE.Vector3(0,200,-100), new THREE.Vector3(-100,100,-100));
+				draw.drawLine(new THREE.Vector3(-100,100,-100), new THREE.Vector3(0,0,-100));
 
 				document.getElementById('ipd').innerHTML =
 						effect.getInterpupillaryDistance().toFixed(3);
