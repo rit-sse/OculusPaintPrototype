@@ -83,10 +83,10 @@
 
 				var geometry = new THREE.PlaneGeometry(1000, 1000, segments, segments);
 				var matEven = new THREE.MeshBasicMaterial({
-					color: 0xCCCCFC
+					color: 0xFF0000
 				});
 				var matOdd = new THREE.MeshBasicMaterial({
-					color: 0x444464
+					color: 0x00FF00
 				});
 
 				var materials = [matEven, matOdd];
@@ -113,7 +113,9 @@
 
 				effect = new THREE.OculusRiftEffect( renderer );
 
-				draw.init(renderer, scene, camera);
+				//init the Draw object
+				draw = new Draw(renderer,scene, camera);
+
 				draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100));
 				draw.drawLine(new THREE.Vector3(100,100,-100), new THREE.Vector3(0,200,-100));
 				draw.drawLine(new THREE.Vector3(0,200,-100), new THREE.Vector3(-100,100,-100));

@@ -1,13 +1,17 @@
-var Draw = function(){
-    this.renderer;
-    this.scene;
-    this.camera;
-}
-
-Draw.prototype.init = function(renderer, scene, camera){
+var Draw = function(renderer, scene, camera){
     this.renderer = renderer;
     this.scene = scene;
     this.camera = camera;
+    this.lineColor = 0x000000;
+    this.lineWidth = 5;
+}
+
+Draw.prototype.setColor = function(color){
+    this.lineColor = color;
+}
+
+Draw.prototype.setWidth = function(width){
+    this.linewidth = width;
 }
 
 Draw.prototype.drawLine = function(start, stop){
@@ -19,8 +23,8 @@ Draw.prototype.drawLine = function(start, stop){
     geometry.vertices.push(stop);
 
     var material = new THREE.LineBasicMaterial({
-        color: 0x000000,
-        linewidth: 5
+        color: this.lineColor,
+        linewidth: this.lineWidth
         });
 
     var line = new THREE.Line(geometry, material);
