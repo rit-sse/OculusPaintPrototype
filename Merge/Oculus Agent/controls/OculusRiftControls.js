@@ -161,20 +161,18 @@ THREE.OculusRiftControls = function ( camera ) {
 
 		}
 
-		var rotation = new THREE.Quaternion();
-		var angles = new THREE.Vector3();
-		if (vrstate) {
-			rotation.set(
-					vrstate.hmd.rotation[0],
-					vrstate.hmd.rotation[1],
-					vrstate.hmd.rotation[2],
-					vrstate.hmd.rotation[3]);
-			angles.setEulerFromQuaternion(rotation, 'XYZ');
-			angles.z = 0;
-			angles.normalize();
-			rotation.setFromEuler(angles, 'XYZ');
-			rotation.normalize();
-			velocity.applyQuaternion(rotation);
+		if (vrstate && vrstate.hmd.present) {
+		var rot = new THREE.Quaternion(
+			vrstate.hmd.rotation[0],
+			vrstate.hmd.rotation[1],
+			vrstate.hmd.rotation[2],
+			vrstate.hmd.rotation[3]);
+			console.log(rot);
+
+		this.moveObject.quaternion = rot;
+		//this.moveObject.quaternion.multiply(this.quatoffset);
+
+		this.moveObject.quaternion.normalize();
 		}
 
 		moveObject.translateX( velocity.x );
