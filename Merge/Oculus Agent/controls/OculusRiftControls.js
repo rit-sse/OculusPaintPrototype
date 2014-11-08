@@ -174,7 +174,7 @@ THREE.OculusRiftControls = function ( camera ) {
 			angles.normalize();
 			rotation.setFromEuler(angles, 'XYZ');
 			rotation.normalize();
-			// velocity.applyQuaternion(rotation);
+			velocity.applyQuaternion(rotation);
 		}
 
 		moveObject.translateX( velocity.x );

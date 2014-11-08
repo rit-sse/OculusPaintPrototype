@@ -33,13 +33,42 @@
 		<script src="controls/OculusRiftControls.js"></script>
 		<script src="effects/OculusRiftEffect.js"></script>
 		<script src="Draw/draw.js"></script>
-		<script src="node_modules/net"></script>
-		<script src="client-net.js"></script>
+		<script src="client-net.js"></script>*/
+		<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 	</head>
 	<body>
 		<div id="info">IPD: <span id='ipd'>0</span> (+o/-p)</div>
-
 		<script>
+			var socket = io.connect('http://localhost:8125');
+			socket.on( function (data) {
+				console.log('client connected');
+				var obj = { size : 20, name: "Jason" };
+				var json = JSON.stringify(obj);
+				client.write(json);
+			})
+			var lastNode = null;
+			/*var client = net.connect({port: 8125},
+			 function() { //'connect' listener
+			 console.log('client connected');
+			 //var obj = { size : 20, name: "Jason" };
+			 //var json = JSON.stringify(obj);
+			 //client.write(json);
+			 });*/
+			socket.on('data', function(data) {
+				console.log("Here");
+				console.log(data);
+				if (lastNode == null){
+					lastNode = parse(data);
+				}else{
+					var newNode = parse(data);
+					draw.drawLine(lastNode,newNode);
+					lastNode = newNode;
+				}
+			});
+			socket.on('end', function() {
+				console.log('client disconnected');
+			});
+
 		(function() {
 
 
@@ -117,9 +146,10 @@
 
 				// Poll VR, if it's ready.
 				var polled = vr.pollState(vrstate);
+				//console.log(vrstate);
 				draw.controls.update( Date.now() - time, polled ? vrstate : null );
 
-				//renderer.render( scene, camera );
+				draw.renderer.render( draw.scene, draw.camera );
 				effect.render( draw.scene, draw.camera, polled ? vrstate : null );
 
 				time = Date.now();
