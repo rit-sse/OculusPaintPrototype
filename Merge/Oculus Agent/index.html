@@ -32,18 +32,48 @@
 		<script src="dependency/three.js"></script>
 		<script src="controls/OculusRiftControls.js"></script>
 		<script src="effects/OculusRiftEffect.js"></script>
-		<script src="dependency/draw.js"></script>
+		<script src="Draw/draw.js"></script>
+		<script src="client-net.js"></script>*/
+		<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 	</head>
 	<body>
 		<div id="info">IPD: <span id='ipd'>0</span> (+o/-p)</div>
-
 		<script>
+			var socket = io.connect('http://localhost:8125');
+			socket.on( function (data) {
+				console.log('client connected');
+				var obj = { size : 20, name: "Jason" };
+				var json = JSON.stringify(obj);
+				client.write(json);
+			})
+			var lastNode = null;
+			/*var client = net.connect({port: 8125},
+			 function() { //'connect' listener
+			 console.log('client connected');
+			 //var obj = { size : 20, name: "Jason" };
+			 //var json = JSON.stringify(obj);
+			 //client.write(json);
+			 });*/
+			socket.on('data', function(data) {
+				console.log("Here");
+				console.log(data);
+				if (lastNode == null){
+					lastNode = parse(data);
+				}else{
+					var newNode = parse(data);
+					draw.drawLine(lastNode,newNode);
+					lastNode = newNode;
+				}
+			});
+			socket.on('end', function() {
+				console.log('client disconnected');
+			});
+
 		(function() {
-			var camera, scene, renderer;
-			var controls
+
+
 			var time = Date.now();
 			var effect; // rift effect
-			var draw = new Draw();
 
 
 			if (!vr.isInstalled()) {
@@ -61,60 +91,12 @@
 			});
 
 			function init() {
+				drawInit()
 
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-
-				scene = new THREE.Scene();
-				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
-
-				var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-				light.position.set( 1, 1, 1 );
-				scene.add( light );
-
-				var light = new THREE.DirectionalLight( 0xffffff, 0.75 );
-				light.position.set( -1, - 0.5, -1 );
-				scene.add( light );
-
-				controls = new THREE.OculusRiftControls( camera );
-				scene.add( controls.getObject() );
-
-				// floor
-				var segments = 80;
-
-				var geometry = new THREE.PlaneGeometry(1000, 1000, segments, segments);
-				var matEven = new THREE.MeshBasicMaterial({
-					color: 0xFF0000
-				});
-				var matOdd = new THREE.MeshBasicMaterial({
-					color: 0x00FF00
-				});
-
-				var materials = [matEven, matOdd];
-				var i,x,y;
-				for (x=0; x < segments ; x++){
-					for (y = 0; y < segments; y++){
-						i = x * segments + y;
-						geometry.faces[i].materialIndex = (x + y) % 2;
-					}
-				}
-
-				var floor = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
-
-				floor.position.y = -1.9;//make it on the ground 
-				floor.rotation.x = -Math.PI/2; //rotate it to the ground
-				scene.add(floor);
-
-				renderer = new THREE.WebGLRenderer({
-					devicePixelRatio: 1,
-					alpha: false,
-					clearColor: 0xffffff,
-					antialias: true
-				});
-
-				effect = new THREE.OculusRiftEffect( renderer );
+				effect = new THREE.OculusRiftEffect( draw.renderer );
 
 				//init the Draw object
-				draw = new Draw(renderer,scene, camera);
+
 
 				draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100));
 				draw.drawLine(new THREE.Vector3(100,100,-100), new THREE.Vector3(0,200,-100));
@@ -124,11 +106,10 @@
 				document.getElementById('ipd').innerHTML =
 						effect.getInterpupillaryDistance().toFixed(3);
 
-				document.body.appendChild( renderer.domElement );
+				document.body.appendChild( draw.renderer.domElement );
 
 				//
 				document.addEventListener( 'keydown', keyPressed, false );
-				
 			}
 			function keyPressed (event) {
 				switch ( event.keyCode ) {
@@ -165,10 +146,11 @@
 
 				// Poll VR, if it's ready.
 				var polled = vr.pollState(vrstate);
-				controls.update( Date.now() - time, polled ? vrstate : null );
+				//console.log(vrstate);
+				draw.controls.update( Date.now() - time, polled ? vrstate : null );
 
-				//renderer.render( scene, camera );
-				effect.render( scene, camera, polled ? vrstate : null );
+				draw.renderer.render( draw.scene, draw.camera );
+				effect.render( draw.scene, draw.camera, polled ? vrstate : null );
 
 				time = Date.now();
 			}
