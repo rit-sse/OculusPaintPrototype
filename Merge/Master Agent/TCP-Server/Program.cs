@@ -18,10 +18,10 @@ class MyTcpListener
             IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
             // TcpListener server = new TcpListener(port);
-            kinectListener = new TcpListener(localAddr, kinectPort);
+            //kinectListener = new TcpListener(localAddr, kinectPort);
             oculusListener = new TcpListener(localAddr,oculusPort);
             // Start listening for client requests.
-            kinectListener.Start();
+            //kinectListener.Start();
             oculusListener.Start();
             // Buffer for reading data
             Byte[] bytes = new Byte[256];
@@ -34,8 +34,8 @@ class MyTcpListener
             // Perform a blocking call to accept requests. 
             // You could also user server.AcceptSocket() here.
 
-            kinect = kinectListener.AcceptTcpClient();
-            Console.WriteLine("Kinect Connected!");
+            //kinect = kinectListener.AcceptTcpClient();
+            //Console.WriteLine("Kinect Connected!");
             oculus = oculusListener.AcceptTcpClient();
             Console.WriteLine("Oculus Connected!");
             while (true)
@@ -45,21 +45,21 @@ class MyTcpListener
                 data = null;
 
                 // Get a stream object for reading and writing
-                NetworkStream kinectStream = kinect.GetStream();
+                //NetworkStream kinectStream = kinect.GetStream();
                 NetworkStream oculusStream = oculus.GetStream();
                 
 
                 int i;
 
                 // Loop to receive all the data sent by the client. 
-                while ((i = kinectStream.Read(bytes, 0, bytes.Length)) != 0)
+                while ((i = oculusStream.Read(bytes, 0, bytes.Length)) != 0)
                 {
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                     Console.WriteLine("Received: {0}", data);
 
                      byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
+                     Console.WriteLine(msg);
                      oculusStream.Write(msg, 0, msg.Length);
 
                    

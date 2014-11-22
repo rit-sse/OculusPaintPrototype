@@ -92,19 +92,35 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
-                        this.grabRightWrist(skel);
+                        sendBodyParts(skel);
                     }
                 }
             }
 
         }
 
-        private void grabRightWrist(Skeleton skeleton)
+        private void sendBodyParts(Skeleton skeleton)
+        {
+            String vectors = @"{";
+            vectors += this.grabRightWrist(skeleton);
+            vectors += @",";
+            vectors += this.grabChest(skeleton);
+            vectors += @"}";
+            this.tcp.Connect("127.0.0.1", vectors);
+        }
+
+        private String grabRightWrist(Skeleton skeleton)
         {
             SkeletonPoint rWrist = skeleton.Joints[JointType.WristRight].Position;
-            Console.WriteLine(rWrist.X + " " + rWrist.Y + " " + rWrist.Z);
-            String vector = @"{""Vectors"": [ {""X"":" + rWrist.X + @",""Y"":" + rWrist.Y + @",""Z"":" + rWrist.Z + "}]}";
-            this.tcp.Connect("127.0.0.1", vector);
+            String vector = @"rWrist"": [ {""X"":" + rWrist.X + @",""Y"":" + rWrist.Y + @",""Z"":" + rWrist.Z + "}]";
+            return vector;
+        }
+
+        private String grabChest(Skeleton skeleton)
+        {
+            SkeletonPoint chest = skeleton.Joints[JointType.Spine].Position;
+            String vector = @"Chest"": [ {""X"":" + chest.X + @",""Y"":" + chest.Y + @",""Z"":" + chest.Z + "}]";
+            return vector;
         }
 
         static void Main(string[] args)
