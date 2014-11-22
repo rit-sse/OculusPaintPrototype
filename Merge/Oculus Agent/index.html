@@ -68,7 +68,7 @@
 					lastNode = newNode;
 				}
 			});
-			socket.on('end', function() {
+			socket.on('disconnect', function() {
 				console.log('client disconnected');
 			});
 
@@ -151,8 +151,10 @@
 				var polled = vr.pollState(vrstate);
 				//console.log(vrstate);
 				draw.controls.update( Date.now() - time, polled ? vrstate : null );
+				
+				//im not too sure about this line 
+				//draw.renderer.render( draw.scene, draw.camera );
 
-				draw.renderer.render( draw.scene, draw.camera );
 				effect.render( draw.scene, draw.camera, polled ? vrstate : null );
 
 				time = Date.now();
