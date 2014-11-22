@@ -140,6 +140,9 @@
 					case 32: // space
 						vr.resetHmdOrientation();
 						break;
+
+					case 81: //q
+						socket.emit('data', 'Hello');
 				}
 			}
 
