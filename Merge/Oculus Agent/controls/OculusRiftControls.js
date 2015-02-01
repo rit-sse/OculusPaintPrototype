@@ -161,19 +161,19 @@ THREE.OculusRiftControls = function ( camera ) {
 
 		}
 
-		if (vrstate && vrstate.hmd.present) {
-		var rot = new THREE.Quaternion(
-			vrstate.hmd.rotation[0],
-			vrstate.hmd.rotation[1],
-			vrstate.hmd.rotation[2],
-			vrstate.hmd.rotation[3]);
-			console.log(rot);
+		// if (vrstate && vrstate.hmd.present) {
+		// var rot = new THREE.Quaternion(
+		// 	vrstate.hmd.rotation[0],
+		// 	vrstate.hmd.rotation[1],
+		// 	vrstate.hmd.rotation[2],
+		// 	vrstate.hmd.rotation[3]);
+		// 	console.log(rot);
 
-		this.moveObject.quaternion = rot;
-		//this.moveObject.quaternion.multiply(this.quatoffset);
+		// this.moveObject.quaternion = rot;
+		// //this.moveObject.quaternion.multiply(this.quatoffset);
 
-		this.moveObject.quaternion.normalize();
-		}
+		// this.moveObject.quaternion.normalize();
+		// }
 
 		moveObject.translateX( velocity.x );
 		moveObject.translateY( velocity.y );

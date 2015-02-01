@@ -35,9 +35,9 @@ Draw.prototype.drawLine = function(start, stop){
 var draw = new Draw();
 
 function drawInit(){
-    var camera, scene, renderer;
+    var camera, scene, renderer, element;
     var controls;
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
 
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
@@ -80,11 +80,10 @@ function drawInit(){
 
     scene.add(floor);
 
-    renderer = new THREE.WebGLRenderer({
-        devicePixelRatio: 1,
-        alpha: false,
-        clearColor: 0xffffff,
-        antialias: true
-    });
+    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    element = document.getElementById('viewport');
+    element.appendChild(renderer.domElement);
     draw = new Draw(renderer,scene, camera,controls);
 }
+

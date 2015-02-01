@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>NPVR Three.js Boxes Demo</title>
+		<title>Oculous Paint</title>
 		<style>
 			html, body {
 				width: 100%;
@@ -28,141 +28,19 @@
 			}
 
 		</style>
-		<script src="dependency/vr.js"></script>
 		<script src="dependency/three.js"></script>
 		<script src="controls/OculusRiftControls.js"></script>
-		<script src="effects/OculusRiftEffect.js"></script>
+		<script src="effects/RiftCamera.js"></script>
 		<script src="Draw/draw.js"></script>
 		<script src="client-net.js"></script>
 		<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+		<script src="dependency/cupola.js"></script>
 	</head>
 	<body>
-		<div id="info">IPD: <span id='ipd'>0</span> (+o/-p)</div>
-		<script>
-			var socket = io.connect('http://localhost:8125',{secure:false});
-			socket.on('connect', function () {
-				console.log('client connected');
-				var obj = { size : 20, name: "Jason" };
-				var data = JSON.stringify(obj);
-				socket.emit('data', data);
-			})
-			socket.on('disconnect', function(){
-				consolelog("opps client disconnect")
-			})
-			var lastNode = null;
-			/*var client = net.connect({port: 8125},
-			 function() { //'connect' listener
-			 console.log('client connected');
-			 //var obj = { size : 20, name: "Jason" };
-			 //var json = JSON.stringify(obj);
-			 //client.write(json);
-			 });*/
-			socket.on('data', function(data) {
-				console.log("Here");
-				console.log(data);
-				if (lastNode == null){
-					lastNode = parse(data);
-				}else{
-					var newNode = parse(data);
-					draw.drawLine(lastNode,newNode);
-					lastNode = newNode;
-				}
-			});
-			socket.on('disconnect', function() {
-				console.log('client disconnected');
-			});
 
-		(function() {
+		<div id="viewport"></div>
 
-
-			var time = Date.now();
-			var effect; // rift effect
-
-
-			if (!vr.isInstalled()) {
-				//statusEl.innerText = 'NPVR plugin not installed!';
-				alert('NPVR plugin not installed!');
-			}
-			vr.load(function(error) {
-				if (error) {
-					//statusEl.innerText = 'Plugin load failed: ' + error.toString();
-					alert('Plugin load failed: ' + error.toString());
-				}
-				init();
-				animate();
-				
-			});
-
-			function init() {
-				drawInit()
-
-				effect = new THREE.OculusRiftEffect( draw.renderer );
-
-				//init the Draw object
-
-
-				draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100));
-				draw.drawLine(new THREE.Vector3(100,100,-100), new THREE.Vector3(0,200,-100));
-				draw.drawLine(new THREE.Vector3(0,200,-100), new THREE.Vector3(-100,100,-100));
-				draw.drawLine(new THREE.Vector3(-100,100,-100), new THREE.Vector3(0,0,-100));
-
-				document.getElementById('ipd').innerHTML =
-						effect.getInterpupillaryDistance().toFixed(3);
-
-				document.body.appendChild( draw.renderer.domElement );
-
-				//
-				document.addEventListener( 'keydown', keyPressed, false );
-			}
-			function keyPressed (event) {
-				switch ( event.keyCode ) {
-					case 79: // o
-						effect.setInterpupillaryDistance(
-								effect.getInterpupillaryDistance() - 0.001);
-						document.getElementById('ipd').innerHTML =
-								effect.getInterpupillaryDistance().toFixed(3);
-						break;
-					case 80: // p
-						effect.setInterpupillaryDistance(
-								effect.getInterpupillaryDistance() + 0.001);
-						document.getElementById('ipd').innerHTML =
-								effect.getInterpupillaryDistance().toFixed(3);
-						break;
-
-					case 70: // f
-						if (!vr.isFullScreen()) {
-							vr.enterFullScreen();
-						} else {
-							vr.exitFullScreen();
-						}
-						break;
-
-					case 32: // space
-						vr.resetHmdOrientation();
-						break;
-
-					case 81: //q
-						socket.emit('data', 'Hello');
-				}
-			}
-
-			var vrstate = new vr.State();
-			function animate() {
-				vr.requestAnimationFrame(animate);
-
-				// Poll VR, if it's ready.
-				var polled = vr.pollState(vrstate);
-				//console.log(vrstate);
-				draw.controls.update( Date.now() - time, polled ? vrstate : null );
-				
-				//im not too sure about this line 
-				//draw.renderer.render( draw.scene, draw.camera );
-
-				effect.render( draw.scene, draw.camera, polled ? vrstate : null );
-
-				time = Date.now();
-			}
-		})();
-		</script>
+		<script src="ioClient.js"></script>
+		<script src="oculousPaint.js"></script>
 	</body>
 </html>

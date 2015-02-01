@@ -36,7 +36,7 @@ THREE.OculusRiftEffect = function(renderer) {
    * @type {boolean}
    * @private
    */
-  this.present_ = false;
+  this.present_ = true;
 
   /**
    * Stereo renderer.
@@ -54,7 +54,7 @@ THREE.OculusRiftEffect = function(renderer) {
    * @type {!vr.State}
    * @private
    */
-  this.dummyState_ = new vr.State();
+  this.dummyState_ = {"x":0,"y":0,"z":0,"w":0};
 
   /**
    * Eye camera.
@@ -107,19 +107,6 @@ THREE.OculusRiftEffect.prototype.setInterpupillaryDistance = function(value) {
  */
 THREE.OculusRiftEffect.prototype.render = function(scene, camera, vrstate) {
   var info = vr.getHmdInfo() || vr.HmdInfo.DEFAULT;
-  var nowPresent = vrstate ? vrstate.hmd.present : false;
-  if (nowPresent != this.present_) {
-    if (nowPresent) {
-      // Connected.
-      this.present_ = true;
-
-      // Initialize the renderer/etc.
-      this.init_(info);
-    } else {
-      // Disconnected.
-      this.present_ = false;
-    }
-  }
 
   // Propagate camera options.
   var params = this.stereoRenderer_.getParams();
@@ -149,10 +136,10 @@ THREE.OculusRiftEffect.prototype.render = function(scene, camera, vrstate) {
   // Rotate by Oculus data.
   if (vrstate) {
     var quat = new THREE.Quaternion(
-        vrstate.hmd.rotation[0],
-        vrstate.hmd.rotation[1],
-        vrstate.hmd.rotation[2],
-        vrstate.hmd.rotation[3]);
+        vrstate.x,
+        vrstate.y,
+        vrstate.z,
+        vrstate.w);
     var rotMat = new THREE.Matrix4();
     rotMat.setRotationFromQuaternion(quat);
     eyeWorldMatrix.multiply(rotMat);
@@ -164,7 +151,7 @@ THREE.OculusRiftEffect.prototype.render = function(scene, camera, vrstate) {
     for (var n = 0; n < 16; n++) {
       target.elements[n] = source[n];
     }
-  };
+  }
 
   // Render eyes.
   this.stereoRenderer_.render(vrstate || this.dummyState_, function(eye) {
