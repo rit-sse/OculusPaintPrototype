@@ -47,6 +47,8 @@ function initScene() {
   camera = new THREE.PerspectiveCamera(60, 1280 / 800, 0.001, 10);
   camera.position.z = 2;
   scene = new THREE.Scene();
+  controls = new THREE.OculusRiftControls( camera );
+  scene.add(controls.getObject());
   var geometry = new THREE.IcosahedronGeometry(1, 1);
   var material = new THREE.MeshNormalMaterial();
   mesh = new THREE.Mesh(geometry, material);
@@ -63,14 +65,16 @@ function initRenderer() {
   vrrenderer = new THREE.VRRenderer(renderer, vrHMD);
 }
 
+var time = Date.now();
 function render() {
   requestAnimationFrame(render);
   mesh.rotation.y += 0.01;
   var state = vrHMDSensor.getState();
-  camera.quaternion.set(state.orientation.x, 
-                        state.orientation.y, 
-                        state.orientation.z, 
+  controls.update(Date.now() - time);
+  camera.quaternion.set(state.orientation.x,
+                        state.orientation.y,
+                        state.orientation.z,
                         state.orientation.w);
   vrrenderer.render(scene, camera);
-
+  time = Date.now();
 }
