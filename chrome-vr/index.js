@@ -31,7 +31,7 @@ function vrDeviceCallback(vrdevs) {
       break;
     }
   }
-  for (var i = 0; i < vrdevs.length; ++i) {
+  for (i = 0; i < vrdevs.length; ++i) {
     if (vrdevs[i] instanceof PositionSensorVRDevice &&
       vrdevs[i].hardwareUnitId == vrHMD.hardwareUnitId) {
       vrHMDSensor = vrdevs[i];
@@ -67,10 +67,14 @@ function render() {
   requestAnimationFrame(render);
   mesh.rotation.y += 0.01;
   var state = vrHMDSensor.getState();
-  camera.quaternion.set(state.orientation.x, 
-                        state.orientation.y, 
-                        state.orientation.z, 
-                        state.orientation.w);
+  if(state !== null){
+    camera.quaternion.set(state.orientation.x,
+                          state.orientation.y,
+                          state.orientation.z,
+                          state.orientation.w);
+  }else{
+    console.log(state);
+  }
   vrrenderer.render(scene, camera);
 
 }
