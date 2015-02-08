@@ -75,7 +75,7 @@ function render() {
   mesh.rotation.y += 0.01;
   var state = vrHMDSensor.getState();
   controls.update(Date.now() - time);
-  if(state !== null){
+  if(state.orientation !== null){
     camera.quaternion.set(state.orientation.x,
                           state.orientation.y,
                           state.orientation.z,
