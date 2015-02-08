@@ -60,6 +60,7 @@ THREE.OculusRiftControls = function ( camera ) {
 	};
 
 	var onKeyDown = function ( event ) {
+		console.log("keydown");
 
 		switch ( event.keyCode ) {
 

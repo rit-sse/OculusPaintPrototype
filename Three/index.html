@@ -40,7 +40,7 @@
 		<script>
 		(function() {
 			var camera, scene, renderer;
-			var controls
+			var controls;
 			var time = Date.now();
 			var effect; // rift effect
 			var draw = new Draw();
@@ -57,7 +57,7 @@
 				}
 				init();
 				animate();
-				
+
 			});
 
 			function init() {
@@ -98,9 +98,9 @@
 					}
 				}
 
-				var floor = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials))
+				var floor = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
 
-				floor.position.y = -1.9;//make it on the ground 
+				floor.position.y = -1.9;//make it on the ground
 				floor.rotation.x = -Math.PI/2; //rotate it to the ground
 				scene.add(floor);
 
@@ -128,7 +128,7 @@
 
 				//
 				document.addEventListener( 'keydown', keyPressed, false );
-				
+
 			}
 			function keyPressed (event) {
 				switch ( event.keyCode ) {

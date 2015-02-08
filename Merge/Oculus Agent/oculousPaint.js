@@ -16,7 +16,7 @@ var cupola = new Cupola({
     },
     "onConfigUpdate" : function(config) {
 		console.log("Oculus config updated.");
-		riftCam.setHMD(config);      
+		riftCam.setHMD(config);
 		onResize();
     },
     "onOrientationUpdate" : function(quatValues) {
@@ -25,7 +25,7 @@ var cupola = new Cupola({
 		quat.setFromAxisAngle(bodyAxis, bodyAngle);
 
 		// make a quaternion for the current orientation of the Rift
-		
+
 		quatCam.set(quatValues.x, quatValues.y, quatValues.z, quatValues.w);
 
 		// multiply the body rotation by the Rift rotation.
@@ -50,13 +50,13 @@ cupola.connect();
 
 function init() {
 	//init the draw object
-	drawInit()
+	drawInit();
 
 	effect = new THREE.OculusRiftEffect( draw.renderer );
 
 	//draw a box
 
-	draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100)); 
+	draw.drawLine(new THREE.Vector3(0,0,-100), new THREE.Vector3(100,100,-100));
 	draw.drawLine(new THREE.Vector3(100,100,-100), new THREE.Vector3(0,200,-100));
 	draw.drawLine(new THREE.Vector3(0,200,-100), new THREE.Vector3(-100,100,-100));
 	draw.drawLine(new THREE.Vector3(-100,100,-100), new THREE.Vector3(0,0,-100));
@@ -74,11 +74,11 @@ function keyPressed (event) {
 
 
 function animate() {
-	console.log("hello");
-	vrstate = cupola.getOrientation
+  //this gets called alot
+	vrstate = cupola.getOrientation;
 
 	draw.controls.update( Date.now() - time, vrstate );
-	
+
 	effect.render( draw.scene, draw.camera, vrstate );
 
 	requestAnimationFrame(animate);
@@ -90,10 +90,10 @@ function onResize() {
   if(!useRift){
     windowHalf = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
     aspectRatio = window.innerWidth / window.innerHeight;
-   
+
     draw.camera.aspect = aspectRatio;
     draw.camera.updateProjectionMatrix();
-   
+
     draw.renderer.setSize(window.innerWidth, window.innerHeight);
   } else {
     controls.setSize(window.innerWidth, window.innerHeight);
