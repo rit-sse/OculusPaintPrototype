@@ -10,19 +10,22 @@ window.addEventListener("load", function(){
   }
 }, false);
 
-window.addEventListener("keypress", function(e) {
-    if (e.charCode == 'f'.charCodeAt(0)) {
-        if (renderCanvas.mozRequestFullScreen) {
-            renderCanvas.mozRequestFullScreen({
-                vrDisplay: vrHMD
-            });
-        } else if (renderCanvas.webkitRequestFullscreen) {
-            renderCanvas.webkitRequestFullscreen({
-                vrDisplay: vrHMD,
-            });
-        }
-    }
-}, false);
+function fullScreen(){
+  window.addEventListener("keypress", function(e) {
+      if (e.charCode == 'f'.charCodeAt(0)) {
+          if (renderCanvas.mozRequestFullScreen) {
+              renderCanvas.mozRequestFullScreen({
+                  vrDisplay: vrHMD
+              });
+          } else if (renderCanvas.webkitRequestFullscreen) {
+              renderCanvas.webkitRequestFullscreen({
+                  vrDisplay: vrHMD,
+              });
+          }
+      }
+  }, false);
+}
+
 
 function vrDeviceCallback(vrdevs) {
   for (var i = 0; i < vrdevs.length; ++i) {
@@ -38,6 +41,7 @@ function vrDeviceCallback(vrdevs) {
       break;
     }
   }
+  fullScreen();
   initScene();
   initRenderer();
   render();
