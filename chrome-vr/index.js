@@ -1,3 +1,4 @@
+//uses the built in webVR stuff in the browser
 window.addEventListener("load", function(){
   if(navigator.getVRDevices){
     //promis
@@ -10,6 +11,7 @@ window.addEventListener("load", function(){
   }
 }, false);
 
+//enables the vr rendering when you full screen the window
 function fullScreen(){
   window.addEventListener("keypress", function(e) {
       if (e.charCode == 'f'.charCodeAt(0)) {
@@ -26,7 +28,7 @@ function fullScreen(){
   }, false);
 }
 
-
+//find the viewdevies and the sensor device
 function vrDeviceCallback(vrdevs) {
   for (var i = 0; i < vrdevs.length; ++i) {
     if (vrdevs[i] instanceof HMDVRDevice) {
@@ -47,6 +49,7 @@ function vrDeviceCallback(vrdevs) {
   render();
 }
 
+//This is were you init the scene
 function initScene() {
   camera = new THREE.PerspectiveCamera(60, 1280 / 800, 0.001, 10);
   camera.position.z = 2;
@@ -59,6 +62,7 @@ function initScene() {
   scene.add(mesh);
 }
 
+//set up the renderer for the oculous using THREE
 function initRenderer() {
   renderCanvas = document.getElementById("render-canvas");
   renderer = new THREE.WebGLRenderer({
@@ -69,6 +73,7 @@ function initRenderer() {
   vrrenderer = new THREE.VRRenderer(renderer, vrHMD);
 }
 
+//render loop
 var time = Date.now();
 function render() {
   requestAnimationFrame(render);
@@ -80,6 +85,7 @@ function render() {
                           state.orientation.y,
                           state.orientation.z,
                           state.orientation.w);
+    console.log(state.orientation);
   }else{
     console.log(state);
   }
