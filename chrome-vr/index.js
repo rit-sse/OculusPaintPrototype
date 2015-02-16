@@ -85,9 +85,9 @@ function render() {
                           state.orientation.y,
                           state.orientation.z,
                           state.orientation.w);
-    console.log(state.orientation);
+    //console.log(state.orientation);
   }else{
-    console.log(state);
+    //console.log(state);
   }
   vrrenderer.render(scene, camera);
   time = Date.now();
