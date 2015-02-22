@@ -1,27 +1,32 @@
-var io = require('socket.io')();
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(8125);
+//server.listen(80);
 var oculusAgents = [];
 var kinectAgents = [];
 
-io.on('connection',function(socket){
-	console.log("client connected");
-	
-	socket.on('data',function(data){
-		console.log(data);
-	});
-
-	socket.on('oculusConnect',function(){
-		oculusAgents.push(socket);
-	});
-
-	socket.on('kinectConnect', function(){
-		kinectAgents.push(socket);
-	})
-
-	socket.on('disconnect', function(data){
-		console.log("client disconnected")
-		
-	});
-
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/index.html');
 });
 
-io.listen(8125);
+io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        try {
+            res = JSON.parse(data);
+        }catch(ex){
+            console.log("parse error");
+            return;
+        }
+        id = res.id;
+        if(id.substring(0,id.length-1) == "Oculus"){
+            console.log("Message from Oculus1")
+        }else if(id.substring(0,id.length-1) == "Kinect"){
+            console.log("Message from Kinect1")
+        }
+        else {
+            console.log("Message not from Oculus or Kinect");
+        }
+    });
+});
