@@ -8,6 +8,7 @@ function drawLine(start, stop){
 
     var material = new THREE.LineBasicMaterial({
         color: 0x000000,
+        linewidth: 4,
         });
 
     var line = new THREE.Line(geometry, material);
