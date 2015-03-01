@@ -1,5 +1,6 @@
 {
-    "id": "Kinect1",
+    "from" : "Kinect1",
+    "to" : "Master"
     "data": {
         "LHand": {
             "X": 1,
