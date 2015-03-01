@@ -1,6 +1,7 @@
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var log = require('./logDrawings.js');
 server.listen(8125);
 //server.listen(80);
 var oculusAgents = [];
@@ -21,9 +22,12 @@ io.on('connection', function (socket) {
         }
         id = res.id;
         if(id.substring(0,id.length-1) == "Oculus"){
-            console.log("Message from Oculus1")
+            console.log("Message from Oculus1");
+
         }else if(id.substring(0,id.length-1) == "Kinect"){
-            console.log("Message from Kinect1")
+            console.log("Message from Kinect1");
+            log.writeToLog(res.data);
+
         }
         else {
             console.log("Message not from Oculus or Kinect");
