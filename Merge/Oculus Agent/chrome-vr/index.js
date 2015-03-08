@@ -52,12 +52,12 @@ function vrDeviceCallback(vrdevs) {
 //This is were you init the scene
 function initScene() {
   camera = new THREE.PerspectiveCamera(60, 1280 / 800, 0.001, 100);
-  camera.z = 2;
+  camera.position.z = 2;
   scene = new THREE.Scene();
   console.log("before");
-  controls = new THREE.KinectControls(camera);
+  controls = new THREE.OculusRiftControls(camera);
   console.log("after");
-  scene.add(controls.getObject());
+  scene.add(camera);
 
   //shear
   var geometry = new THREE.IcosahedronGeometry(1, 1);
@@ -92,6 +92,8 @@ function initScene() {
   floor.rotation.x = -Math.PI/2; //rotate it to the ground
 
   scene.add(floor);
+
+  addColorWheel();
 }
 
 //set up the renderer for the oculous using THREE
@@ -121,6 +123,6 @@ function render() {
   }else{
     //console.log(state);
   }
-  vrrenderer.render(scene, camera);
+  vrrenderer.render( scene, camera );
   time = Date.now();
 }

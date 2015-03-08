@@ -20,11 +20,6 @@
 THREE.OculusRiftControls = function ( camera ) {
 
   var scope = this;
-
-  var moveObject = new THREE.Object3D();
-  moveObject.position.y = 10;
-  moveObject.add( camera );
-
   var moveForward = false;
   var moveBackward = false;
   var moveLeft = false;
@@ -100,12 +95,6 @@ THREE.OculusRiftControls = function ( camera ) {
   document.addEventListener( 'keyup', onKeyUp, false );
 
   this.enabled = false;
-
-  this.getObject = function () {
-
-    return moveObject;
-
-  };
 
   this.isOnObject = function ( boolean ) {
 
