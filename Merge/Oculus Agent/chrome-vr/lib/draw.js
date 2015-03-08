@@ -1,5 +1,8 @@
+var lineColor = 0x000000;
+var colorPos = [];
+
 function drawLine(start, stop){
-    lineColor = 0x000000;
+
 
     console.log("Drawing Start: " + start.x + " Stop: " + stop.x);
 
@@ -15,6 +18,10 @@ function drawLine(start, stop){
     var line = new THREE.Line(geometry, material);
 
     this.scene.add( line );
+}
+
+function colorChange(lHandPos){
+
 }
 
 function addColorWheel(){
@@ -60,6 +67,7 @@ function addColorWheel(){
   redBox.position.set(-0.725,0.675,-1);
   scene.add(redBox);
   colorBox.add(redBox);
+  colorPos.push({x1:0.85,x2:0.6,y1:0.55,y2:0.8,object:redBox});
 
   //blue color
   var blueBoxGeo = new THREE.Geometry();

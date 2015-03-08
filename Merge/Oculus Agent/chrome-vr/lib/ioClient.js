@@ -2,6 +2,7 @@ var socket = io.connect('http://localhost:8125',{secure:false});
 
 socket.on('connect', function () {
 	console.log('client connected');
+	socket.emit('init',{"from" : "Oculus"});
 	//var obj = { size : 20, name: "Jason" };
 	//var data = JSON.stringify(obj);
 	//socket.emit('data', data);
@@ -10,7 +11,6 @@ socket.on('disconnect', function(){
 	consolelog("opps client disconnect");
 });
 
-var LHandDraw = null;
 var RHandDraw = null;
 
 //handle a drawing event
@@ -23,21 +23,12 @@ socket.on('data', function(data) {
 		var move = obj.data.torso;
 		controls.move(move);
 
-		//check to see if the left hand should be drawing
-		//if not set LHand to null
+		//check to see if the left hand is pressed
 		if(data.LHand.active){
-			//if LHandDraw is null set it
-			//else draw a line with the new data and LHandDraw then swap
-			if (LHandDraw === null){
-				LHandDraw = new THREE.Vector3(data.LHand.x,data.LHand.y,data.LHand.z);
-			}else{
-				var leftTemp = new THREE.Vector3(data.LHand.x,data.LHand.y,data.LHand.z);
-				drawLine(LHandDraw,leftTemp);
-				LHandDraw = leftTemp;
-			}
-		}else{
-			LHandDraw = null;
-		}
+			//if it is check if its thouching a box
+			lHandPos = new THREE.Vector3(data.LHand.x,data.LHand.y,data.LHand.z);
+			colorChange(lHandPos);
+		}else{}
 		//same as above just all right hand
 		if(data.RHand.active){
 			if (RHandDraw === null){
