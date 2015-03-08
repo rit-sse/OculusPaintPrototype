@@ -12,4 +12,11 @@ exports.writeToLog = function(message) {
             console.log("The file was saved!");
         }
     });
+};
+
+exports.readLog = function(callback){
+    fs.readFile("drawingLog/dl1.txt","utf8",function(err,data){
+        if (err) throw err;
+        console.log(data);
+    });
 }

@@ -1,6 +1,6 @@
 {
     "from" : "Kinect1",
-    "to" : "Master"
+    "to" : "Master",
     "data": {
         "LHand": {
             "X": 1,
