@@ -2,7 +2,7 @@ var socket = io.connect('http://localhost:8125',{secure:false});
 
 socket.on('connect', function () {
 	console.log('client connected');
-	socket.emit('init',{"from" : "Oculus"});
+	socket.emit('init','{"from" : "Oculus"}');
 	//var obj = { size : 20, name: "Jason" };
 	//var data = JSON.stringify(obj);
 	//socket.emit('data', data);
@@ -31,6 +31,7 @@ socket.on('data', function(data) {
 		}else{}
 		//same as above just all right hand
 		if(data.RHand.active){
+			console.log("drawing");
 			if (RHandDraw === null){
 				RHandDraw = new THREE.Vector3(data.RHand.x,data.RHand.y,data.RHand.z);
 			}else{

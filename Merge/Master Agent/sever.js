@@ -12,7 +12,7 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
+    socket.emit('data', { hello: 'world' });
 
 
     socket.on('my other event', function (data) {
@@ -37,21 +37,21 @@ io.on('connection', function (socket) {
     });
     socket.on('init',function(data){
         try {
+            console.log(data);
             res = JSON.parse(data);
         }catch(ex){
             console.log("parse error");
             return;
         }
-        id = res.id;
-        if(id.substring(0,id.length-1) == "Oculus"){
+        if(res.from === "Oculus"){
             console.log("Initing Oculus1");
             log.readLog(function(data){
                 for (var line in data){
-                    socket.emit(line);
+                    socket.emit('data',line);
                 }
             });
 
-        }else if(id.substring(0,id.length-1) == "Kinect"){
+        }else if(res.from === "Kinect"){
             console.log("Initing Kinect1");
 
         }
