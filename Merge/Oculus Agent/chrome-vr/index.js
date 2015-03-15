@@ -1,4 +1,6 @@
 //uses the built in webVR stuff in the browser
+var controls;
+
 window.addEventListener("load", function(){
   if(navigator.getVRDevices){
     //promis
@@ -46,6 +48,7 @@ function vrDeviceCallback(vrdevs) {
   fullScreen();
   initScene();
   initRenderer();
+  openConnection();
   render();
 }
 
@@ -55,7 +58,7 @@ function initScene() {
   camera.position.z = 2;
   scene = new THREE.Scene();
   console.log("before");
-  controls = new THREE.OculusRiftControls(camera);
+  controls = new THREE.KinectControls(camera);
   console.log("after");
   scene.add(camera);
 

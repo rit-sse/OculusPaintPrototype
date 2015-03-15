@@ -13,9 +13,6 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-    socket.emit('data', { hello: 'world' });
-
-
     socket.on('my other event', function (data) {
         try {
             res = JSON.parse(data);
@@ -49,7 +46,7 @@ io.on('connection', function (socket) {
             log.readLog(function(data){
                 var obj = JSON.parse(data);
                 _.forEach(obj, function(line){
-                    socket.emit('data',line);
+                    socket.emit('data',JSON.stringify(line));
                 });
             });
 
