@@ -2,6 +2,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var log = require('./logDrawings.js');
+var _ = require('underscore');
 server.listen(8125);
 //server.listen(80);
 var oculusAgents = [];
@@ -46,9 +47,10 @@ io.on('connection', function (socket) {
         if(res.from === "Oculus"){
             console.log("Initing Oculus1");
             log.readLog(function(data){
-                for (var line in data){
+                var obj = JSON.parse(data);
+                _.forEach(obj, function(line){
                     socket.emit('data',line);
-                }
+                });
             });
 
         }else if(res.from === "Kinect"){

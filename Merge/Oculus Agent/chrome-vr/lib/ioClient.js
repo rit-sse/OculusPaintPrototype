@@ -17,10 +17,12 @@ var RHandDraw = null;
 socket.on('data', function(data) {
 	console.log(data);
 	//hopfully the json is formed correctly...
+	/*
 	try{
 		//Move us if we have moved
 		var obj = JSON.parse(data);
-		var move = obj.data.torso;
+		console.log(obj);
+		var move = obj.data.Torso;
 		controls.move(move);
 
 		//check to see if the left hand is pressed
@@ -45,6 +47,7 @@ socket.on('data', function(data) {
 	}catch(err){
 		console.log(err);
 	}
+	*/
 });
 
 
