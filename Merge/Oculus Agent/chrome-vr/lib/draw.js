@@ -36,7 +36,7 @@ function addColorWheel(){
   colorBoxGeo.faces.push(new THREE.Face3(0,2,3));
 
   var colorBoxMaterial = new THREE.MeshBasicMaterial({
-    color: 0xF4A460,
+    color: 0xFFFFFF,
     side: THREE.DoubleSide,
     transparent: true,
     opacity: 0.5
