@@ -61,7 +61,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="JsonTest.cs" />
     <Compile Include="SkeletonGrabber.cs" />
     <Compile Include="TCP-Client.cs" />
     <Page Include="MainWindow.xaml">

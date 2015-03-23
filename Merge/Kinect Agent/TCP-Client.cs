@@ -31,7 +31,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 // combination.
                 if (tcp == null)
                 {
-                    Int32 port = 8124;
+                    Int32 port = 8126;
                     tcp = new TcpClient(server, port);
                 }
                 // Translate the passed message into ASCII and store it as a Byte array.

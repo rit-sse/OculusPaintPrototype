@@ -7,9 +7,10 @@ var fileName = "dl1.txt";
 exports.writeToLog = function(message) {
     fs.readFile("drawingLog/dl1.txt","utf8",function(err,data){
        if (err) {
-            console.log(err);
+            console.log("Error: " + err);
         } else{
-            var obj = JSON.parse(data);
+            console.log("Data: " + message + "\n");
+            /*var obj = JSON.parse(data);
             obj.push(message);
             fs.writeFile("drawingLog/dl1.txt",JSON.stringify(obj),"utf8",function(err,data){
                 if (err){
@@ -17,7 +18,7 @@ exports.writeToLog = function(message) {
                 }else{
                     console.log("log written");
                 }
-            });
+            });*/
         }
     });
 

@@ -57,9 +57,9 @@ function initScene() {
   camera = new THREE.PerspectiveCamera(60, 1280 / 800, 0.001, 100);
   camera.position.z = 2;
   scene = new THREE.Scene();
-  console.log("before");
+//  console.log("before");
   controls = new THREE.KinectControls(camera);
-  console.log("after");
+  //console.log("after");
   scene.add(camera);
 
   //shear

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Kinect;
+using System.Threading;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
@@ -89,7 +90,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 foreach (Skeleton skel in skeletons)
                 {
-
+                    Thread.Sleep(500);
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
                         sendBodyParts(skel);
@@ -101,25 +102,25 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private void sendBodyParts(Skeleton skeleton)
         {
-            String vectors = @"{";
+            String vectors = @"{""from"":""Kinect1"",""to"":""Master"",""data"":{";
             vectors += this.grabRightWrist(skeleton);
             vectors += @",";
             vectors += this.grabChest(skeleton);
-            vectors += @"}";
+            vectors += @"}}";
             this.tcp.Connect("127.0.0.1", vectors);
         }
 
         private String grabRightWrist(Skeleton skeleton)
         {
             SkeletonPoint rWrist = skeleton.Joints[JointType.WristRight].Position;
-            String vector = @"rWrist"": [ {""X"":" + rWrist.X + @",""Y"":" + rWrist.Y + @",""Z"":" + rWrist.Z + "}]";
+            String vector = @"""rWrist"": [ {""X"":" + rWrist.X + @",""Y"":" + rWrist.Y + @",""Z"":" + rWrist.Z + @",""active"": true }]";
             return vector;
         }
 
         private String grabChest(Skeleton skeleton)
         {
             SkeletonPoint chest = skeleton.Joints[JointType.Spine].Position;
-            String vector = @"Chest"": [ {""X"":" + chest.X + @",""Y"":" + chest.Y + @",""Z"":" + chest.Z + "}]";
+            String vector = @"""Chest"": [ {""X"":" + chest.X + @",""Y"":" + chest.Y + @",""Z"":" + chest.Z + @",""active"": true }]";
             return vector;
         }
 
