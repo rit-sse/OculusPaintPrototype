@@ -8,7 +8,7 @@ function openConnection(){
 		//socket.emit('data', data);
 	});
 	socket.on('disconnect', function(){
-		consolelog("opps client disconnect");
+		console.log("opps client disconnect");
 	});
 
 	var RHandDraw = null;
@@ -19,9 +19,12 @@ function openConnection(){
 		//hopfully the json is formed correctly...
 		try{
 			//Move us if we have moved
+			//var d = data.replace(/\"/g,'"');
 			var obj = JSON.parse(data);
-			var move = obj.data.Torso;
-			controls.move(move);
+			console.log("Data: " + data);
+			console.log("Obj: " + obj.data);
+			//var move = obj.data.Torso;
+			//controls.move(move);
 			//check to see if the left hand is pressed
 			if(obj.data.LHand.active){
 				//if it is check if its thouching a box

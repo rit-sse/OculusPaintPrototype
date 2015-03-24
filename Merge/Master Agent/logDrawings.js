@@ -5,33 +5,24 @@ var fs = require('fs');
 var fileName = "dl1.txt";
 
 exports.writeToLog = function(message) {
-    fs.readFile("drawingLog/dl1.txt","utf8",function(err,data){
-       if (err) {
-            console.log("Error: " + err);
-        } else{
-            console.log("Data: " + message + "\n");
-            /*var obj = JSON.parse(data);
-            obj.push(message);
-            fs.writeFile("drawingLog/dl1.txt",JSON.stringify(obj),"utf8",function(err,data){
-                if (err){
-                    console.log(err);
-                }else{
-                    console.log("log written");
-                }
-            });*/
-        }
-    });
-
-};
-/*
-    fs.appendFile("drawingLog/dl1.txt", message + "\n", function (err) {
+    fs.readFile("drawingLog/dl1.txt","utf8",function(err,data) {
         if (err) {
             console.log(err);
         } else {
-            console.log("The file was saved!");
+            var obj = JSON.parse(data);
+            obj.push(message);
+            var newLog = JSON.stringify(obj);
+            //console.log("NewLog: " + newLog);
+            fs.writeFile("drawingLog/dl1.txt", newLog, "utf8", function (err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("log written");
+                }
+            });
         }
     });
-*/
+};
 
 exports.readLog = function(callback){
     fs.readFile("drawingLog/dl1.txt","utf8",function(err,data){

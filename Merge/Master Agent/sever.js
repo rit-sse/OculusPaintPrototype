@@ -8,6 +8,7 @@ server.listen(8125);
 //server.listen(80);
 var oculusAgents = [];
 var kinectAgents = [];
+var oculus = null;
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
@@ -15,27 +16,14 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
     console.log("Connection Made");
+    if(oculus == null){
+        oculus = socket;
+    }
     socket.on('my other event', function (data) {
-        try {
-            res = JSON.parse(data);
-        }catch(ex){
-            console.log("parse error");
-            return;
-        }
-        id = res.id;
-        if(id.substring(0,id.length-1) == "Oculus"){
-            console.log("Message from Oculus1");
-
-        }else if(id.substring(0,id.length-1) == "Kinect"){
-            console.log("Message from Kinect1");
-            log.writeToLog(res.data);
-
-        }
-        else {
-            console.log("Message not from Oculus or Kinect");
-        }
+     receivedData(data);
     });
     socket.on('init',function(data){
+        socket.join('some room');
         console.log("Init Start");
         try {
             console.log(data);
@@ -49,6 +37,8 @@ io.on('connection', function (socket) {
             log.readLog(function(data){
                 var obj = JSON.parse(data);
                 _.forEach(obj, function(line){
+              //      console.log(line);
+              //      console.log("End of Line");
                     socket.emit('data',JSON.stringify(line));
                 });
             });
@@ -67,53 +57,67 @@ var tcp_server = net.createServer(function(socket)
 {
     console.log("Connection Made");
     socket.on('data', function (data) {
-        try {
-            var buf = new Buffer(data,"base64")
-            console.log("Buff: " + buf);
-            res = JSON.parse(buf);
-        }catch(ex){
-            console.log("parse error");
-            return;
-        }
-        id = res.from;
-        if(id.substring(0,id.length-1) == "Oculus"){
-            console.log("Message from Oculus1");
-
-        }else if(id.substring(0,id.length-1) == "Kinect" && res.data != ""){
-            console.log("Message from Kinect1");
-            console.log(res.data);
-            log.writeToLog(JSON.stringify(res.data));
-
-        }
-        else {
-            console.log("Message not from Oculus or Kinect");
-        }
+        receivedData(data);
     });
     socket.on('init',function(data){
-        console.log("Init Start");
-        try {
-            console.log(data);
-            res = JSON.parse(data);
-        }catch(ex){
-            console.log("parse error");
-            return;
-        }
-        if(res.from === "Oculus"){
-            console.log("Initing Oculus1");
-            log.readLog(function(data){
-                var obj = JSON.parse(data);
-                _.forEach(obj, function(line){
-                    socket.emit('data',JSON.stringify(line));
-                });
-            });
-
-        }else if(res.from === "Kinect"){
-            console.log("Initing Kinect1");
-
-        }
-        else {
-            console.log("Message not from Oculus or Kinect");
-        }
+        receivedInit(data);
     });
 });
 tcp_server.listen(8126);
+
+receivedData = function(data){
+    try {
+        var buf = new Buffer(data,"base64")
+        //console.log("Buff: " + buf);
+        res = JSON.parse(buf);
+    }catch(ex){
+        console.log("parse error");
+        return;
+    }
+    id = res.from;
+    if(id.substring(0,id.length-1) == "Oculus"){
+        console.log("Message from Oculus1");
+
+    }else if(id.substring(0,id.length-1) == "Kinect" && res.data != ""){
+        console.log("Message from Kinect1");
+        log.writeToLog(res);
+        if(oculus != null){
+            console.log("Sending to Oculus");
+
+
+            io.to('some room').emit('data',JSON.stringify(res));
+        }
+
+
+    }
+    else {
+        console.log("Message not from Oculus or Kinect");
+    }
+};
+
+receivedInit = function(data){
+    console.log("Init Start");
+    try {
+        console.log(data);
+        res = JSON.parse(data);
+    }catch(ex){
+        console.log("parse error");
+        return;
+    }
+    if(res.from === "Oculus"){
+        console.log("Initing Oculus1");
+        log.readLog(function(data){
+            var obj = JSON.parse(data);
+            _.forEach(obj, function(line){
+                socket.emit('data',JSON.stringify(line));
+            });
+        });
+
+    }else if(res.from === "Kinect"){
+        console.log("Initing Kinect1");
+
+    }
+    else {
+        console.log("Message not from Oculus or Kinect");
+    }
+};

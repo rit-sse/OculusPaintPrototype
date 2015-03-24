@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Kinect;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
@@ -90,7 +91,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 foreach (Skeleton skel in skeletons)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                     if (skel.TrackingState == SkeletonTrackingState.Tracked)
                     {
                         sendBodyParts(skel);
@@ -102,26 +103,36 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private void sendBodyParts(Skeleton skeleton)
         {
-            String vectors = @"{""from"":""Kinect1"",""to"":""Master"",""data"":{";
-            vectors += this.grabRightWrist(skeleton);
-            vectors += @",";
-            vectors += this.grabChest(skeleton);
-            vectors += @"}}";
-            this.tcp.Connect("127.0.0.1", vectors);
+            BodyPart left = this.grabLeftHand(skeleton);
+            BodyPart right = this.grabRightHand(skeleton);
+            BodyPart torso = this.grabTorso(skeleton);
+
+            Body body = new Body(right,left,torso);
+            Message message = new Message("Kinect1", "Master", body);
+            string send = JsonConvert.SerializeObject(message);
+            Console.WriteLine("Sending Message: " + send);
+            this.tcp.Connect("127.0.0.1", send);
         }
 
-        private String grabRightWrist(Skeleton skeleton)
+        private BodyPart grabRightHand(Skeleton skeleton)
         {
-            SkeletonPoint rWrist = skeleton.Joints[JointType.WristRight].Position;
-            String vector = @"""rWrist"": [ {""X"":" + rWrist.X + @",""Y"":" + rWrist.Y + @",""Z"":" + rWrist.Z + @",""active"": true }]";
-            return vector;
+            SkeletonPoint rHand = skeleton.Joints[JointType.WristRight].Position;
+            BodyPart hand = new BodyPart( rHand.X, rHand.Y, rHand.Z, true);
+            return hand;
         }
 
-        private String grabChest(Skeleton skeleton)
+        private BodyPart grabLeftHand(Skeleton skeleton)
         {
-            SkeletonPoint chest = skeleton.Joints[JointType.Spine].Position;
-            String vector = @"""Chest"": [ {""X"":" + chest.X + @",""Y"":" + chest.Y + @",""Z"":" + chest.Z + @",""active"": true }]";
-            return vector;
+            SkeletonPoint lHand = skeleton.Joints[JointType.WristLeft].Position;
+            BodyPart hand = new BodyPart(lHand.X, lHand.Y, lHand.Z, true);
+            return hand;
+        }
+
+        private BodyPart grabTorso(Skeleton skeleton)
+        {
+            SkeletonPoint torso = skeleton.Joints[JointType.Spine].Position;
+            BodyPart spine = new BodyPart( torso.X, torso.Y, torso.Z, true);
+            return spine;
         }
 
         static void Main(string[] args)

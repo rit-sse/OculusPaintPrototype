@@ -66,7 +66,7 @@ function initScene() {
   var geometry = new THREE.IcosahedronGeometry(1, 1);
   var material = new THREE.MeshNormalMaterial();
   mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  //scene.add(mesh);
 
   // floor
   var segments = 8;
