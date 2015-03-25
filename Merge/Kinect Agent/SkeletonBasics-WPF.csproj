@@ -67,6 +67,7 @@
     </ApplicationDefinition>
     <Compile Include="Body.cs" />
     <Compile Include="BodyPart.cs" />
+    <Compile Include="LostConnection.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="SkeletonGrabber.cs" />
     <Compile Include="TCP-Client.cs" />

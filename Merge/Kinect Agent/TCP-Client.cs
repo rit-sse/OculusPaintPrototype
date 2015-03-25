@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
@@ -58,9 +59,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
+            catch (IOException e)
+            {
+                throw new LostConnection("50000");
+            }
 
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
         }
     }
 }

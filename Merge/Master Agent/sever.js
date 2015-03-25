@@ -62,6 +62,13 @@ var tcp_server = net.createServer(function(socket)
     socket.on('init',function(data){
         receivedInit(data);
     });
+	socket.on('end',function(){
+		console.log("Closed Connection");
+	});
+	
+	socket.on('error',function(){
+		console.log("Had Error");
+	});
 });
 tcp_server.listen(8126);
 

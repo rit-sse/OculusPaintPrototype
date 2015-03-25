@@ -20,11 +20,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// Connection to the tcp client
         /// </summary>
         MyTCP_Client tcp;
+        bool hasConnection;
 
         public SkeletonGrabber()
         {
             MyTCP_Client tcp = new MyTCP_Client();
             this.tcp = tcp;
+            this.hasConnection = true;
             InitializeComponent();
         }
 
@@ -111,7 +113,37 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             Message message = new Message("Kinect1", "Master", body);
             string send = JsonConvert.SerializeObject(message);
             Console.WriteLine("Sending Message: " + send);
-            this.tcp.Connect("127.0.0.1", send);
+            try
+            {
+                this.tcp.Connect("127.0.0.1", send);
+            }
+            catch (LostConnection e)
+            {
+                if (!LostConnectionToServer(e.Message,send))
+                {
+                    this.hasConnection = false;
+                }
+            }
+        }
+
+        private bool LostConnectionToServer(String timeoutLength,String send)
+        {
+            int start = DateTime.Now.Millisecond;
+            int diff = Convert.ToInt32(timeoutLength);
+            bool reconnected = false;
+            while (DateTime.Now.Millisecond < start + diff)
+            {
+                Thread.Sleep(diff / 5);
+                this.tcp = new MyTCP_Client();
+                try
+                {
+                    this.tcp.Connect("127.0.0.1", send);
+                    reconnected = true;
+                    break;
+                }
+                catch (LostConnection e) { }
+            }
+            return reconnected;
         }
 
         private BodyPart grabRightHand(Skeleton skeleton)
@@ -138,7 +170,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         static void Main(string[] args)
         {
             SkeletonGrabber sg = new SkeletonGrabber();
-            while (true) ;
+            while (sg.hasConnection) ;
         }
     }
 
