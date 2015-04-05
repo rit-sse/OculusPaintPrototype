@@ -21,6 +21,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         MyTCP_Client tcp;
         bool hasConnection;
+        string server = "mycroft.ad.sofse.org";
 
         public SkeletonGrabber()
         {
@@ -91,38 +92,45 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
             if (skeletons.Length != 0)
             {
-                foreach (Skeleton skel in skeletons)
+                Skeleton skel = skeletons[0];
+                //Thread.Sleep(100);
+                if (skel.TrackingState == SkeletonTrackingState.Tracked)
                 {
-                    Thread.Sleep(100);
-                    if (skel.TrackingState == SkeletonTrackingState.Tracked)
-                    {
-                        sendBodyParts(skel);
-                    }
+                    sendBodyParts(skel);
                 }
+                
             }
 
         }
 
         private void sendBodyParts(Skeleton skeleton)
         {
-            BodyPart left = this.grabLeftHand(skeleton);
-            BodyPart right = this.grabRightHand(skeleton);
-            BodyPart torso = this.grabTorso(skeleton);
+            bool status = true;
 
-            Body body = new Body(right,left,torso);
-            Message message = new Message("Kinect1", "Master", body);
-            string send = JsonConvert.SerializeObject(message);
-            Console.WriteLine("Sending Message: " + send);
-            try
-            {
-                this.tcp.Connect("127.0.0.1", send);
-            }
-            catch (LostConnection e)
-            {
-                if (!LostConnectionToServer(e.Message,send))
+            BodyPart left = this.grabLeftHand(skeleton,out status);
+            BodyPart right = this.grabRightHand(skeleton,out status);
+            BodyPart torso = this.grabTorso(skeleton,out status);
+             
+            if (status) {
+                Body body = new Body(right,left,torso);
+                Message message = new Message("Kinect1", "Master", body);
+                string send = JsonConvert.SerializeObject(message);
+                Console.WriteLine("Sending Message: " + send);
+                try
                 {
-                    this.hasConnection = false;
+                    this.tcp.Connect(this.server, send);
                 }
+                catch (LostConnection e)
+                {
+                    if (!LostConnectionToServer(e.Message,send))
+                    {
+                        this.hasConnection = false;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Lost Track of one of the Joints");
             }
         }
 
@@ -137,7 +145,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.tcp = new MyTCP_Client();
                 try
                 {
-                    this.tcp.Connect("127.0.0.1", send);
+                    this.tcp.Connect(this.server, send);
                     reconnected = true;
                     break;
                 }
@@ -146,24 +154,46 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             return reconnected;
         }
 
-        private BodyPart grabRightHand(Skeleton skeleton)
+        private BodyPart grabRightHand(Skeleton skeleton, out bool status)
         {
             SkeletonPoint rHand = skeleton.Joints[JointType.WristRight].Position;
             BodyPart hand = new BodyPart( rHand.X, rHand.Y, rHand.Z, true);
+            status = true;
+            if (skeleton.Joints[JointType.WristRight].TrackingState != JointTrackingState.Tracked)
+            {
+                status = false;
+                Console.WriteLine(skeleton.Joints[JointType.WristRight].TrackingState);
+                Console.WriteLine("Lost right Hand");
+            }
+            
             return hand;
         }
 
-        private BodyPart grabLeftHand(Skeleton skeleton)
+        private BodyPart grabLeftHand(Skeleton skeleton,out bool status)
         {
             SkeletonPoint lHand = skeleton.Joints[JointType.WristLeft].Position;
             BodyPart hand = new BodyPart(lHand.X, lHand.Y, lHand.Z, true);
+            status = true;
+            if (skeleton.Joints[JointType.WristRight].TrackingState != JointTrackingState.Tracked)
+            {
+                status = false;
+                Console.WriteLine(skeleton.Joints[JointType.WristLeft].TrackingState);
+                Console.WriteLine("Lost left Hand");
+            }
             return hand;
         }
 
-        private BodyPart grabTorso(Skeleton skeleton)
+        private BodyPart grabTorso(Skeleton skeleton,out bool status)
         {
             SkeletonPoint torso = skeleton.Joints[JointType.Spine].Position;
             BodyPart spine = new BodyPart( torso.X, torso.Y, torso.Z, true);
+            status = true;
+            if (skeleton.Joints[JointType.WristRight].TrackingState != JointTrackingState.Tracked)
+            {
+                status = false;
+                Console.WriteLine(skeleton.Joints[JointType.Spine].TrackingState);
+                Console.WriteLine("Lost torso");
+            }
             return spine;
         }
 

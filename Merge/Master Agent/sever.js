@@ -87,7 +87,7 @@ receivedData = function(data){
 
     }else if(id.substring(0,id.length-1) == "Kinect" && res.data != ""){
         console.log("Message from Kinect1");
-        log.writeToLog(res);
+        //log.writeToLog(res);
         if(oculus != null){
             console.log("Sending to Oculus");
 
